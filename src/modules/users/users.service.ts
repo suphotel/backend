@@ -3,18 +3,28 @@ import { PrismaService } from '../../providers/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PasswordService } from '../../common/password/password.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly passwordService: PasswordService,
+  ) {}
 
   async findMany(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findById(id: number): Promise<User> {
     return this.prisma.user.findUnique({
       where: { id },
+    });
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: { email },
     });
   }
 
@@ -23,7 +33,7 @@ export class UsersService {
       data: {
         email: data.email,
         pseudo: data.pseudo,
-        password: data.password,
+        password: await this.passwordService.hashPassword(data.password),
         role: 'USER',
       },
     });

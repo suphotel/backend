@@ -9,7 +9,8 @@ import {
 import { AuthService } from './auth.service';
 import { User } from '@prisma/client';
 import { RegisterDto } from './dto/register.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './jwt.guard';
+import { LocalAuthGuard } from './local.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,19 +21,19 @@ export class AuthController {
     return await this.authService.register(data);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
     return await this.authService.login(req.user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Get('whoami')
   async whoami(@Request() req): Promise<User> {
-    return await this.authService.whoami(parseInt(req.user.userId));
+    return req.user;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Post('delete-my-account')
   async deleteMyAccount(@Request() req): Promise<User> {
     return await this.authService.deleteMyAccount(parseInt(req.user.userId));

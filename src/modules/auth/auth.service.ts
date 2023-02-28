@@ -45,4 +45,8 @@ export class AuthService {
   async whoami(userId: number): Promise<User> {
     return await this.usersService.findById(userId);
   }
+
+  async deleteMyAccount(userId: number): Promise<User> {
+    return await this.usersService.delete(userId);
+  }
 }

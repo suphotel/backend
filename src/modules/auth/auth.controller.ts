@@ -31,4 +31,10 @@ export class AuthController {
   async whoami(@Request() req): Promise<User> {
     return await this.authService.whoami(parseInt(req.user.userId));
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('delete-my-account')
+  async deleteMyAccount(@Request() req): Promise<User> {
+    return await this.authService.deleteMyAccount(parseInt(req.user.userId));
+  }
 }

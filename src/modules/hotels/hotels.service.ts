@@ -9,12 +9,19 @@ export class HotelsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findMany(): Promise<Hotel[]> {
-    return this.prismaService.hotel.findMany();
+    return this.prismaService.hotel.findMany({
+      include: {
+        images: true,
+      },
+    });
   }
 
   async findById(id: number): Promise<Hotel> {
     return this.prismaService.hotel.findUnique({
       where: { id },
+      include: {
+        images: true,
+      },
     });
   }
 

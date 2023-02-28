@@ -11,10 +11,10 @@ import {
 import { HotelsService } from './hotels.service';
 import { Hotel } from '@prisma/client';
 import { CreateHotelDto } from './dto/create-hotel.dto';
-import { Roles } from '../auth/roles/roles.decorator';
-import { RoleGuard } from '../auth/roles/role.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RoleGuard } from '../auth/guards/role.guard';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
-import { JwtAuthGuard } from '../auth/jwt.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('hotels')
 export class HotelsController {

@@ -9,8 +9,8 @@ import {
 import { AuthService } from './auth.service';
 import { User } from '@prisma/client';
 import { RegisterDto } from './dto/register.dto';
-import { JwtAuthGuard } from './jwt.guard';
-import { LocalAuthGuard } from './local.guard';
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { LocalAuthGuard } from './guards/local.guard';
 
 @Controller('auth')
 export class AuthController {

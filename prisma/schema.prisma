@@ -34,8 +34,28 @@ model Hotel {
   location String
   description String
 
+  images HotelImage[]
+
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   @@map("hotels")
+}
+
+model HotelImage {
+  id Int @id @default(autoincrement())
+
+  originalName String
+  fileName String
+  mimeType String
+  path String
+  size Int
+
+  hotelId Int
+  hotel Hotel @relation(fields: [hotelId], references: [id])
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("hotel_images")
 }

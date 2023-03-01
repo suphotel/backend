@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { HotelsService } from './hotels.service';
 import { Hotel } from '@prisma/client';
@@ -15,6 +17,8 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { ModelNotFound } from '../../common/decorators/model-not-found.decorator';
+import { ModelNotFoundInterceptor } from '../../common/interceptors/model-not-found.interceptor';
 
 @Controller('hotels')
 export class HotelsController {
@@ -26,28 +30,36 @@ export class HotelsController {
   }
 
   @Get(':id')
-  async findOne(@Param() params): Promise<Hotel> {
-    return await this.hotelsService.findById(parseInt(params.id));
+  @ModelNotFound(['Hotel', 'id'])
+  @UseInterceptors(ModelNotFoundInterceptor)
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
+    return await this.hotelsService.findById(id);
   }
 
+  @Post()
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Post()
   async create(@Body() body: CreateHotelDto): Promise<Hotel> {
     return await this.hotelsService.create(body);
   }
 
-  @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard, RoleGuard)
   @Put(':id')
-  async update(@Param() params, @Body() body: UpdateHotelDto): Promise<Hotel> {
-    return await this.hotelsService.update(parseInt(params.id), body);
-  }
-
+  @ModelNotFound(['Hotel', 'id'])
+  @UseInterceptors(ModelNotFoundInterceptor)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateHotelDto,
+  ): Promise<Hotel> {
+    return await this.hotelsService.update(id, body);
+  }
   @Delete(':id')
-  async delete(@Param() params): Promise<Hotel> {
-    return await this.hotelsService.delete(parseInt(params.id));
+  @ModelNotFound(['Hotel', 'id'])
+  @UseInterceptors(ModelNotFoundInterceptor)
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
+    return await this.hotelsService.delete(id);
   }
 }

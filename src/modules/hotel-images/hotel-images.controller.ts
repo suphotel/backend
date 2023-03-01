@@ -2,8 +2,8 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Res,
   UploadedFiles,
@@ -16,26 +16,35 @@ import { HotelImagesService } from './hotel-images.service';
 import { join } from 'path';
 import { RoleGuard } from '../auth/guards/role.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { ModelNotFoundInterceptor } from '../../common/interceptors/model-not-found.interceptor';
+import { ModelNotFound } from '../../common/decorators/model-not-found.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { HotelImage } from '@prisma/client';
 
 @Controller('hotels/:hotelId/images')
 export class HotelImagesController {
   constructor(private readonly hotelImagesService: HotelImagesService) {}
 
   @Post()
+  @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @UseInterceptors(FilesInterceptor('images', null, { dest: './uploads' }))
+  @ModelNotFound(['Hotel', 'hotelId'])
+  @UseInterceptors(
+    ModelNotFoundInterceptor,
+    FilesInterceptor('images', null, { dest: './uploads' }),
+  )
   async upload(
-    @Param('hotelId') hotelId,
-    @UploadedFiles() files: Express.Multer.File[],
+    @Param('hotelId', ParseIntPipe) hotelId: number,
+    @UploadedFiles() images: Express.Multer.File[],
     @Res() res,
-  ) {
-    for (const file of files) {
-      await this.hotelImagesService.create(parseInt(hotelId), {
-        originalName: file.originalname,
-        fileName: file.filename,
-        mimeType: file.mimetype,
-        path: file.path,
-        size: file.size,
+  ): Promise<Response> {
+    for (const image of images) {
+      await this.hotelImagesService.create(hotelId, {
+        originalName: image.originalname,
+        fileName: image.filename,
+        mimeType: image.mimetype,
+        path: image.path,
+        size: image.size,
       });
     }
 
@@ -43,12 +52,13 @@ export class HotelImagesController {
   }
 
   @Get(':id')
-  async getPreview(@Param('id') id: string, @Res() res) {
-    const file = await this.hotelImagesService.findById(parseInt(id));
-
-    if (!file) {
-      throw new NotFoundException();
-    }
+  @ModelNotFound(['HotelImage', 'id'])
+  @UseInterceptors(ModelNotFoundInterceptor)
+  async getPreview(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res,
+  ): Promise<ReadableStream> {
+    const file = await this.hotelImagesService.findById(id);
 
     const stream = createReadStream(join(process.cwd(), file.path));
 
@@ -56,8 +66,11 @@ export class HotelImagesController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async delete(@Param('id') id: string) {
-    return await this.hotelImagesService.delete(parseInt(id));
+  @ModelNotFound(['HotelImage', 'id'])
+  @UseInterceptors(ModelNotFoundInterceptor)
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<HotelImage> {
+    return await this.hotelImagesService.delete(id);
   }
 }

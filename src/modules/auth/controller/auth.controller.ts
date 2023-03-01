@@ -5,6 +5,7 @@ import {
   Post,
   UseGuards,
   Get,
+  Delete,
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { User } from '@prisma/client';
@@ -41,7 +42,7 @@ export class AuthController {
     return req.user;
   }
 
-  @Post('delete-my-account')
+  @Delete('delete-my-account')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete the current user' })
   @ApiBearerAuth()

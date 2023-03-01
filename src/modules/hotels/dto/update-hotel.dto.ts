@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import * as Joi from 'joi';
+
+export const updateHotelSchema = Joi.object({
+  name: Joi.string(),
+  location: Joi.string(),
+  description: Joi.string(),
+});
 
 export class UpdateHotelDto {
-  @IsString()
-  @IsOptional()
   @ApiProperty()
   name: string;
 
-  @IsString()
-  @IsOptional()
   @ApiProperty()
   location: string;
 
-  @IsString()
-  @IsOptional()
   @ApiProperty()
   description: string;
 }

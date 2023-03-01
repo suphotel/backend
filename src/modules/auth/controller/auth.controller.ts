@@ -9,11 +9,12 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { User } from '@prisma/client';
-import { RegisterDto } from '../dto/register.dto';
+import { RegisterDto, registerSchema } from '../dto/register.dto';
 import { JwtAuthGuard } from '../guards/jwt.guard';
 import { LocalAuthGuard } from '../guards/local.guard';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '../dto/login.dto';
+import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -22,7 +23,9 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  async register(@Body() data: RegisterDto): Promise<User> {
+  async register(
+    @Body(new JoiValidationPipe(registerSchema)) data: RegisterDto,
+  ): Promise<User> {
     return await this.authService.register(data);
   }
 

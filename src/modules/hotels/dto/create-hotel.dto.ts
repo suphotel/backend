@@ -1,16 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import * as Joi from 'joi';
+
+export const createHotelSchema = Joi.object({
+  name: Joi.string().required(),
+  location: Joi.string().required(),
+  description: Joi.string().required(),
+});
 
 export class CreateHotelDto {
-  @IsString()
   @ApiProperty()
   name: string;
 
-  @IsString()
   @ApiProperty()
   location: string;
 
-  @IsString()
   @ApiProperty()
   description: string;
 }

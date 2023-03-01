@@ -13,11 +13,18 @@ import {
 } from '@nestjs/common';
 import { BookingsService } from '../service/bookings.service';
 import { Booking } from '@prisma/client';
-import { CreateBookingDto } from '../dto/create-booking.dto';
+import {
+  CreateBookingDto,
+  createBookingSchema,
+} from '../dto/create-booking.dto';
 import { JwtAuthGuard } from '../../auth';
-import { UpdateBookingDto } from '../dto/update-booking.dto';
+import {
+  UpdateBookingDto,
+  updateBookingSchema,
+} from '../dto/update-booking.dto';
 import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 
 @Controller('hotels/:hotelId/bookings')
 @ApiTags('bookings')
@@ -56,7 +63,7 @@ export class BookingsController {
   @ApiBearerAuth()
   async create(
     @Param('hotelId', ParseIntPipe) hotelId: number,
-    @Body() body: CreateBookingDto,
+    @Body(new JoiValidationPipe(createBookingSchema)) body: CreateBookingDto,
     @Req() req,
   ): Promise<Booking> {
     return this.bookingsService.create(hotelId, req.user.id, body);
@@ -74,7 +81,7 @@ export class BookingsController {
   async update(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateBookingDto,
+    @Body(new JoiValidationPipe(updateBookingSchema)) body: UpdateBookingDto,
     @Req() req,
   ): Promise<Booking> {
     return this.bookingsService.update(hotelId, req.user.id, id, body);

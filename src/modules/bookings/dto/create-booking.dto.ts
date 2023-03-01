@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString } from 'class-validator';
+import * as Joi from 'joi';
+
+export const createBookingSchema = Joi.object({
+  startDate: Joi.date().required(),
+  endDate: Joi.date().required(),
+});
 
 export class CreateBookingDto {
-  @IsDateString()
   @ApiProperty()
   startDate: Date;
 
-  @IsDateString()
   @ApiProperty()
   endDate: Date;
 }

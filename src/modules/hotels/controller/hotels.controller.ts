@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { HotelsService } from '../service/hotels.service';
 import { Hotel } from '@prisma/client';
-import { CreateHotelDto } from '../dto/create-hotel.dto';
-import { UpdateHotelDto } from '../dto/update-hotel.dto';
+import { CreateHotelDto, createHotelSchema } from '../dto/create-hotel.dto';
+import { UpdateHotelDto, updateHotelSchema } from '../dto/update-hotel.dto';
 import { Roles, RoleGuard, JwtAuthGuard } from '../../auth';
 import { ModelNotFound, ModelNotFoundInterceptor } from '../../../common';
 import {
@@ -22,6 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 
 @Controller('hotels')
 @ApiTags('hotels')
@@ -48,7 +49,9 @@ export class HotelsController {
   @ApiOperation({ summary: 'Create a new hotel' })
   @ApiBearerAuth()
   @ApiForbiddenResponse({ description: 'Protected by admin role' })
-  async create(@Body() body: CreateHotelDto): Promise<Hotel> {
+  async create(
+    @Body(new JoiValidationPipe(createHotelSchema)) body: CreateHotelDto,
+  ): Promise<Hotel> {
     return await this.hotelsService.create(body);
   }
 
@@ -62,7 +65,7 @@ export class HotelsController {
   @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateHotelDto,
+    @Body(new JoiValidationPipe(updateHotelSchema)) body: UpdateHotelDto,
   ): Promise<Hotel> {
     return await this.hotelsService.update(id, body);
   }

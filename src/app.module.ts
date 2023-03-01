@@ -10,6 +10,7 @@ import { HotelImagesModule } from './modules/hotel-images/hotel-images.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { BookingsModule } from './modules/bookings/bookings.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { join } from 'path';
     CommonModule,
     HotelsModule,
     HotelImagesModule,
+    BookingsModule,
     MulterModule.register({
       dest: './uploads',
     }),

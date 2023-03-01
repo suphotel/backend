@@ -17,15 +17,17 @@ import { CreateBookingDto } from '../dto/create-booking.dto';
 import { JwtAuthGuard } from '../../auth';
 import { UpdateBookingDto } from '../dto/update-booking.dto';
 import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('hotels/:hotelId/bookings')
-@UseInterceptors(ModelNotFoundInterceptor)
+@ApiTags('bookings')
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
   @Get()
   @ModelNotFound([{ model: 'Hotel', field: 'hotelId' }])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Get all bookings for a hotel' })
   async findAll(
     @Param('hotelId', ParseIntPipe) id: number,
   ): Promise<Booking[]> {
@@ -38,6 +40,7 @@ export class BookingsController {
     { model: 'Booking', field: 'id' },
   ])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Get a booking by id' })
   async findOne(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
@@ -49,6 +52,8 @@ export class BookingsController {
   @UseGuards(JwtAuthGuard)
   @ModelNotFound([{ model: 'Hotel', field: 'hotelId' }])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Create a new booking' })
+  @ApiBearerAuth()
   async create(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Body() body: CreateBookingDto,
@@ -64,6 +69,8 @@ export class BookingsController {
     { model: 'Booking', field: 'id' },
   ])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Update a booking' })
+  @ApiBearerAuth()
   async update(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
@@ -80,6 +87,8 @@ export class BookingsController {
     { model: 'Booking', field: 'id' },
   ])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Delete a booking' })
+  @ApiBearerAuth()
   async delete(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,

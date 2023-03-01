@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { PrismaService } from '../../providers/prisma/prisma.service';
 import { Reflector } from '@nestjs/core';
+import { ModelNotFoundParams } from '../decorators/model-not-found.decorator';
 
 @Injectable()
 export class ModelNotFoundInterceptor implements NestInterceptor {
@@ -22,28 +23,27 @@ export class ModelNotFoundInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     const { params } = context.switchToHttp().getRequest();
 
-    const param = this.reflector.get<string[]>(
+    const param = this.reflector.get<ModelNotFoundParams[]>(
       'modelNotFoundParams',
       context.getHandler(),
     );
 
-    const model = param[0];
-    const paramId = param[1];
-
-    if (!model || !paramId) {
-      throw new Error(
-        'ModelNotFoundInterceptor: model or paramId is not defined',
-      );
+    if (!param) {
+      throw new Error('ModelNotFoundInterceptor: param is not defined');
     }
 
-    const entity = await this.prismaService[model].findUnique({
-      where: {
-        id: parseInt(params[paramId]),
-      },
-    });
+    for (const p of param) {
+      const { model, field } = p;
 
-    if (!entity) {
-      throw new NotFoundException();
+      const entity = await this.prismaService[model].findUnique({
+        where: {
+          id: parseInt(params[field]),
+        },
+      });
+
+      if (!entity) {
+        throw new NotFoundException(`${model} not found`);
+      }
     }
 
     return next.handle();

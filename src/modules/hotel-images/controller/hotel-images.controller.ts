@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -17,8 +18,17 @@ import { join } from 'path';
 import { RoleGuard, JwtAuthGuard, Roles } from '../../auth';
 import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
 import { HotelImage } from '@prisma/client';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('hotels/:hotelId/images')
+@ApiTags('hotel-images')
 export class HotelImagesController {
   constructor(private readonly hotelImagesService: HotelImagesService) {}
 
@@ -30,6 +40,23 @@ export class HotelImagesController {
     ModelNotFoundInterceptor,
     FilesInterceptor('images', null, { dest: './uploads' }),
   )
+  @ApiOperation({ summary: 'Upload images for a hotel' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        images: {
+          type: 'array',
+          items: {
+            type: 'file',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @ApiBearerAuth()
   async upload(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @UploadedFiles() images: Express.Multer.File[],
@@ -54,7 +81,16 @@ export class HotelImagesController {
     { model: 'HotelImage', field: 'id' },
   ])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Get a hotel image by id' })
+  @ApiResponse({
+    schema: {
+      type: 'string',
+      format: 'binary',
+    },
+    status: HttpStatus.OK,
+  })
   async getPreview(
+    @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
     @Res() res,
   ): Promise<ReadableStream> {
@@ -73,7 +109,12 @@ export class HotelImagesController {
     { model: 'HotelImage', field: 'id' },
   ])
   @UseInterceptors(ModelNotFoundInterceptor)
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<HotelImage> {
+  @ApiOperation({ summary: 'Delete a hotel image by id' })
+  @ApiBearerAuth()
+  async delete(
+    @Param('hotelId', ParseIntPipe) hotelId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<HotelImage> {
     return await this.hotelImagesService.delete(id);
   }
 }

@@ -16,12 +16,15 @@ import { CreateHotelDto } from '../dto/create-hotel.dto';
 import { UpdateHotelDto } from '../dto/update-hotel.dto';
 import { Roles, RoleGuard, JwtAuthGuard } from '../../auth';
 import { ModelNotFound, ModelNotFoundInterceptor } from '../../../common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('hotels')
+@ApiTags('hotels')
 export class HotelsController {
   constructor(private readonly hotelsService: HotelsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all hotels' })
   async findAll(): Promise<Hotel[]> {
     return await this.hotelsService.findMany();
   }
@@ -29,6 +32,7 @@ export class HotelsController {
   @Get(':id')
   @ModelNotFound([{ model: 'Hotel', field: 'id' }])
   @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Get a hotel by id' })
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
     return await this.hotelsService.findById(id);
   }
@@ -36,6 +40,8 @@ export class HotelsController {
   @Post()
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Create a new hotel' })
+  @ApiBearerAuth()
   async create(@Body() body: CreateHotelDto): Promise<Hotel> {
     return await this.hotelsService.create(body);
   }
@@ -45,6 +51,8 @@ export class HotelsController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Update a hotel' })
+  @ApiBearerAuth()
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateHotelDto,
@@ -56,6 +64,8 @@ export class HotelsController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Delete a hotel' })
+  @ApiBearerAuth()
   async delete(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
     return await this.hotelsService.delete(id);
   }

@@ -22,6 +22,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiForbiddenResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -57,6 +58,7 @@ export class HotelImagesController {
     },
   })
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async upload(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @UploadedFiles() images: Express.Multer.File[],
@@ -111,6 +113,7 @@ export class HotelImagesController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Delete a hotel image by id' })
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async delete(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,

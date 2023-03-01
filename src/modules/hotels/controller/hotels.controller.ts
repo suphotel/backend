@@ -16,7 +16,12 @@ import { CreateHotelDto } from '../dto/create-hotel.dto';
 import { UpdateHotelDto } from '../dto/update-hotel.dto';
 import { Roles, RoleGuard, JwtAuthGuard } from '../../auth';
 import { ModelNotFound, ModelNotFoundInterceptor } from '../../../common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('hotels')
 @ApiTags('hotels')
@@ -42,6 +47,7 @@ export class HotelsController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Create a new hotel' })
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async create(@Body() body: CreateHotelDto): Promise<Hotel> {
     return await this.hotelsService.create(body);
   }
@@ -53,12 +59,14 @@ export class HotelsController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Update a hotel' })
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateHotelDto,
   ): Promise<Hotel> {
     return await this.hotelsService.update(id, body);
   }
+
   @Delete(':id')
   @ModelNotFound([{ model: 'Hotel', field: 'id' }])
   @UseInterceptors(ModelNotFoundInterceptor)
@@ -66,6 +74,7 @@ export class HotelsController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Delete a hotel' })
   @ApiBearerAuth()
+  @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
     return await this.hotelsService.delete(id);
   }

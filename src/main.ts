@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaService } from './providers/prisma/prisma.service';
-import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -9,8 +8,6 @@ async function bootstrap() {
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
-
-  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle('Suphotel API')

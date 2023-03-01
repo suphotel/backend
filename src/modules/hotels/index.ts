@@ -1,2 +1,2 @@
 export * from './hotels.module';
-export * from './hotels.service';
+export * from './service/hotels.service';

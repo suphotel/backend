@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
-import { HotelImagesService } from './hotel-images.service';
+import { HotelImagesService } from '../service/hotel-images.service';
 import { join } from 'path';
-import { RoleGuard, JwtAuthGuard, Roles } from '../auth';
-import { ModelNotFoundInterceptor, ModelNotFound } from '../../common';
+import { RoleGuard, JwtAuthGuard, Roles } from '../../auth';
+import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
 import { HotelImage } from '@prisma/client';
 
 @Controller('hotels/:hotelId/images')

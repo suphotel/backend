@@ -6,11 +6,11 @@ import {
   UseGuards,
   Get,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../service/auth.service';
 import { User } from '@prisma/client';
-import { RegisterDto } from './dto/register.dto';
-import { JwtAuthGuard } from './guards/jwt.guard';
-import { LocalAuthGuard } from './guards/local.guard';
+import { RegisterDto } from '../dto/register.dto';
+import { JwtAuthGuard } from '../guards/jwt.guard';
+import { LocalAuthGuard } from '../guards/local.guard';
 
 @Controller('auth')
 export class AuthController {

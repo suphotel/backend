@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { HotelImagesController } from './hotel-images.controller';
-import { HotelImagesService } from './hotel-images.service';
+import { HotelImagesController } from './controller/hotel-images.controller';
+import { HotelImagesService } from './service/hotel-images.service';
 import { PrismaModule } from '../../providers/prisma';
 import { HotelsModule } from '../hotels';
 

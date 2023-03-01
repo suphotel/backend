@@ -11,12 +11,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { BookingsService } from './bookings.service';
+import { BookingsService } from '../service/bookings.service';
 import { Booking } from '@prisma/client';
-import { CreateBookingDto } from './dto/create-booking.dto';
-import { JwtAuthGuard } from '../auth';
-import { UpdateBookingDto } from './dto/update-booking.dto';
-import { ModelNotFoundInterceptor, ModelNotFound } from '../../common';
+import { CreateBookingDto } from '../dto/create-booking.dto';
+import { JwtAuthGuard } from '../../auth';
+import { UpdateBookingDto } from '../dto/update-booking.dto';
+import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
 
 @Controller('hotels/:hotelId/bookings')
 @UseInterceptors(ModelNotFoundInterceptor)

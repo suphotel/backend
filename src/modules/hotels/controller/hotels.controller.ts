@@ -10,12 +10,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { HotelsService } from './hotels.service';
+import { HotelsService } from '../service/hotels.service';
 import { Hotel } from '@prisma/client';
-import { CreateHotelDto } from './dto/create-hotel.dto';
-import { UpdateHotelDto } from './dto/update-hotel.dto';
-import { Roles, RoleGuard, JwtAuthGuard } from '../auth';
-import { ModelNotFound, ModelNotFoundInterceptor } from '../../common';
+import { CreateHotelDto } from '../dto/create-hotel.dto';
+import { UpdateHotelDto } from '../dto/update-hotel.dto';
+import { Roles, RoleGuard, JwtAuthGuard } from '../../auth';
+import { ModelNotFound, ModelNotFoundInterceptor } from '../../../common';
 
 @Controller('hotels')
 export class HotelsController {

@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { PrismaService } from '../../providers/prisma/prisma.service';
+import { PrismaService } from '../../providers/prisma';
 import { Reflector } from '@nestjs/core';
 import { ModelNotFoundParams } from '../decorators/model-not-found.decorator';
 

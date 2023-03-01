@@ -14,8 +14,8 @@ import { CommonModule } from '../../common/common.module';
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: 'secretKey',
-      signOptions: { expiresIn: '1d' },
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

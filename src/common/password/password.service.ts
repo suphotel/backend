@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PasswordService {
+  constructor(private readonly configService: ConfigService) {}
+
   get bcryptSaltRounds(): number {
-    return 10;
+    return parseInt(process.env.BCRYPT_SALT_OR_ROUNDS) || 10;
   }
 
   async hashPassword(password: string): Promise<string> {

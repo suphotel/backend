@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../providers/prisma';
 import { Hotel } from '@prisma/client';
 import { CreateHotelDto } from '../dto/create-hotel.dto';
@@ -12,17 +12,25 @@ export class HotelsService {
     return this.prismaService.hotel.findMany({
       include: {
         images: true,
+        bookings: true,
       },
     });
   }
 
   async findById(id: number): Promise<Hotel> {
-    return this.prismaService.hotel.findUnique({
+    const hotel = await this.prismaService.hotel.findUnique({
       where: { id },
       include: {
         images: true,
+        bookings: true,
       },
     });
+
+    if (!hotel) {
+      throw new NotFoundException('Hotel not found');
+    }
+
+    return hotel;
   }
 
   async create(data: CreateHotelDto): Promise<Hotel> {
@@ -34,6 +42,14 @@ export class HotelsService {
   }
 
   async update(id: number, data: UpdateHotelDto): Promise<Hotel> {
+    const hotel = await this.prismaService.hotel.findUnique({
+      where: { id },
+    });
+
+    if (!hotel) {
+      throw new NotFoundException('Hotel not found');
+    }
+
     return this.prismaService.hotel.update({
       where: { id },
       data: {
@@ -43,6 +59,14 @@ export class HotelsService {
   }
 
   async delete(id: number): Promise<Hotel> {
+    const hotel = await this.prismaService.hotel.findUnique({
+      where: { id },
+    });
+
+    if (!hotel) {
+      throw new NotFoundException('Hotel not found');
+    }
+
     return this.prismaService.hotel.delete({
       where: { id },
     });

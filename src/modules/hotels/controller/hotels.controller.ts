@@ -72,9 +72,6 @@ export class HotelsController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiOperation({ summary: 'Delete a hotel' })
-  @ApiBearerAuth()
-  @ApiForbiddenResponse({ description: 'Protected by admin role' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
     return await this.hotelsService.delete(id);
   }

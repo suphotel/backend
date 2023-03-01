@@ -13,12 +13,21 @@ export class HotelImagesService {
   ) {}
 
   async findById(id: number): Promise<HotelImage> {
-    return this.prismaService.hotelImage.findUnique({
+    const hotelImage = this.prismaService.hotelImage.findUnique({
       where: { id },
     });
+
+    if (!hotelImage) {
+      throw new NotFoundException('Hotel image not found');
+    }
+
+    return hotelImage;
   }
 
-  async create(hotelId: number, data: CreateHotelImageDto) {
+  async create(
+    hotelId: number,
+    data: CreateHotelImageDto,
+  ): Promise<HotelImage> {
     const hotel = this.hotelsService.findById(hotelId);
 
     if (!hotel) {
@@ -33,8 +42,14 @@ export class HotelImagesService {
     });
   }
 
-  async delete(id: number) {
-    const hotelImage = await this.findById(id);
+  async delete(id: number): Promise<HotelImage> {
+    const hotelImage = await this.prismaService.hotelImage.findUnique({
+      where: { id },
+    });
+
+    if (!hotelImage) {
+      throw new NotFoundException('Hotel image not found');
+    }
 
     await fs.unlinkSync(hotelImage.path);
 

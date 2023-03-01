@@ -30,7 +30,7 @@ export class HotelsController {
   }
 
   @Get(':id')
-  @ModelNotFound(['Hotel', 'id'])
+  @ModelNotFound([{ model: 'Hotel', field: 'id' }])
   @UseInterceptors(ModelNotFoundInterceptor)
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Hotel> {
     return await this.hotelsService.findById(id);
@@ -44,7 +44,7 @@ export class HotelsController {
   }
 
   @Put(':id')
-  @ModelNotFound(['Hotel', 'id'])
+  @ModelNotFound([{ model: 'Hotel', field: 'id' }])
   @UseInterceptors(ModelNotFoundInterceptor)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -55,7 +55,7 @@ export class HotelsController {
     return await this.hotelsService.update(id, body);
   }
   @Delete(':id')
-  @ModelNotFound(['Hotel', 'id'])
+  @ModelNotFound([{ model: 'Hotel', field: 'id' }])
   @UseInterceptors(ModelNotFoundInterceptor)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)

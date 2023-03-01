@@ -28,7 +28,7 @@ export class HotelImagesController {
   @Post()
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @ModelNotFound(['Hotel', 'hotelId'])
+  @ModelNotFound([{ model: 'Hotel', field: 'hotelId' }])
   @UseInterceptors(
     ModelNotFoundInterceptor,
     FilesInterceptor('images', null, { dest: './uploads' }),
@@ -52,7 +52,10 @@ export class HotelImagesController {
   }
 
   @Get(':id')
-  @ModelNotFound(['HotelImage', 'id'])
+  @ModelNotFound([
+    { model: 'Hotel', field: 'hotelId' },
+    { model: 'HotelImage', field: 'id' },
+  ])
   @UseInterceptors(ModelNotFoundInterceptor)
   async getPreview(
     @Param('id', ParseIntPipe) id: number,
@@ -68,7 +71,10 @@ export class HotelImagesController {
   @Delete(':id')
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @ModelNotFound(['HotelImage', 'id'])
+  @ModelNotFound([
+    { model: 'Hotel', field: 'hotelId' },
+    { model: 'HotelImage', field: 'id' },
+  ])
   @UseInterceptors(ModelNotFoundInterceptor)
   async delete(@Param('id', ParseIntPipe) id: number): Promise<HotelImage> {
     return await this.hotelImagesService.delete(id);

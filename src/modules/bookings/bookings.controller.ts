@@ -14,10 +14,9 @@ import {
 import { BookingsService } from './bookings.service';
 import { Booking } from '@prisma/client';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { JwtAuthGuard } from '../auth';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { ModelNotFoundInterceptor } from '../../common/interceptors/model-not-found.interceptor';
-import { ModelNotFound } from '../../common/decorators/model-not-found.decorator';
+import { ModelNotFoundInterceptor, ModelNotFound } from '../../common';
 
 @Controller('hotels/:hotelId/bookings')
 @UseInterceptors(ModelNotFoundInterceptor)

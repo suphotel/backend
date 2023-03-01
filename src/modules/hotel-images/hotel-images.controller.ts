@@ -14,11 +14,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { HotelImagesService } from './hotel-images.service';
 import { join } from 'path';
-import { RoleGuard } from '../auth/guards/role.guard';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { ModelNotFoundInterceptor } from '../../common/interceptors/model-not-found.interceptor';
-import { ModelNotFound } from '../../common/decorators/model-not-found.decorator';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { RoleGuard, JwtAuthGuard, Roles } from '../auth';
+import { ModelNotFoundInterceptor, ModelNotFound } from '../../common';
 import { HotelImage } from '@prisma/client';
 
 @Controller('hotels/:hotelId/images')

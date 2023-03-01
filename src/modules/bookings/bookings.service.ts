@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../providers/prisma/prisma.service';
+import { PrismaService } from '../../providers/prisma';
 import { Booking } from '@prisma/client';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { RelationException } from 'src/common/exceptions/relation.exception';
+import { RelationException } from '../../common';
 
 @Injectable()
 export class BookingsService {

@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../providers/prisma/prisma.service';
-import { CreateHotelImageDto } from './dto/create-hotel-image.dto';
-import { HotelsService } from '../hotels/hotels.service';
-import { HotelImage } from '@prisma/client';
 import * as fs from 'fs';
+import { HotelImage } from '@prisma/client';
+import { PrismaService } from '../../providers/prisma';
+import { HotelsService } from '../hotels';
+import { CreateHotelImageDto } from './dto/create-hotel-image.dto';
 
 @Injectable()
 export class HotelImagesService {

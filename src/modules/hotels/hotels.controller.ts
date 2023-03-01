@@ -13,12 +13,9 @@ import {
 import { HotelsService } from './hotels.service';
 import { Hotel } from '@prisma/client';
 import { CreateHotelDto } from './dto/create-hotel.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { RoleGuard } from '../auth/guards/role.guard';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { ModelNotFound } from '../../common/decorators/model-not-found.decorator';
-import { ModelNotFoundInterceptor } from '../../common/interceptors/model-not-found.interceptor';
+import { Roles, RoleGuard, JwtAuthGuard } from '../auth';
+import { ModelNotFound, ModelNotFoundInterceptor } from '../../common';
 
 @Controller('hotels')
 export class HotelsController {

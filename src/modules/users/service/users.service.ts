@@ -28,6 +28,12 @@ export class UsersService {
     });
   }
 
+  async findByPseudo(pseudo: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: { pseudo },
+    });
+  }
+
   async create(data: CreateUserDto): Promise<User> {
     return this.prisma.user.create({
       data: {

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/service/users.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { UsersService } from '../../users';
 import { RegisterDto } from '../dto/register.dto';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
-import { PasswordService } from '../../../common/password/password.service';
+import { PasswordService } from '../../../common';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +14,20 @@ export class AuthService {
   ) {}
 
   async register(payload: RegisterDto): Promise<User> {
+    const userExistByEmail = await this.usersService.findByEmail(payload.email);
+
+    if (userExistByEmail) {
+      throw new BadRequestException('Email already taken');
+    }
+
+    const userExistByPseudo = await this.usersService.findByPseudo(
+      payload.pseudo,
+    );
+
+    if (userExistByPseudo) {
+      throw new BadRequestException('Pseudo already taken');
+    }
+
     return await this.usersService.create({
       ...payload,
     });

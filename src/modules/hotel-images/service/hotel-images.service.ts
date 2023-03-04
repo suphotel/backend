@@ -12,6 +12,20 @@ export class HotelImagesService {
     private readonly hotelsService: HotelsService,
   ) {}
 
+  async findMany(hotelId: number): Promise<HotelImage[]> {
+    const hotel = this.hotelsService.findById(hotelId);
+
+    if (!hotel) {
+      throw new NotFoundException('Hotel not found');
+    }
+
+    return this.prismaService.hotelImage.findMany({
+      where: {
+        hotelId,
+      },
+    });
+  }
+
   async findById(id: number): Promise<HotelImage> {
     const hotelImage = this.prismaService.hotelImage.findUnique({
       where: { id },

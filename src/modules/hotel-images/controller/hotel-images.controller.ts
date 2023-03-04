@@ -77,6 +77,16 @@ export class HotelImagesController {
     return res.json({ message: 'Image upload successfully' });
   }
 
+  @Get()
+  @ModelNotFound([{ model: 'Hotel', field: 'hotelId' }])
+  @UseInterceptors(ModelNotFoundInterceptor)
+  @ApiOperation({ summary: 'Get a hotel images' })
+  async findAll(
+    @Param('hotelId', ParseIntPipe) hotelId: number,
+  ): Promise<HotelImage[]> {
+    return await this.hotelImagesService.findMany(hotelId);
+  }
+
   @Get(':id')
   @ModelNotFound([
     { model: 'Hotel', field: 'hotelId' },

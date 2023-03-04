@@ -50,6 +50,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Delete the current user' })
   @ApiBearerAuth()
   async deleteMyAccount(@Request() req): Promise<User> {
-    return await this.authService.deleteMyAccount(parseInt(req.user.userId));
+    return await this.authService.deleteMyAccount(parseInt(req.user.id));
   }
 }

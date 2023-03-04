@@ -15,7 +15,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { HotelImagesService } from '../service/hotel-images.service';
 import { join } from 'path';
-import { RoleGuard, JwtAuthGuard, Roles } from '../../auth';
+import { RoleGuard, JwtAuthGuard, Roles } from '../../../common';
 import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
 import { HotelImage } from '@prisma/client';
 import {

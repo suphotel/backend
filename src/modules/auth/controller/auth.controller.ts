@@ -10,8 +10,7 @@ import {
 import { AuthService } from '../service/auth.service';
 import { User } from '@prisma/client';
 import { RegisterDto, registerSchema } from '../dto/register.dto';
-import { JwtAuthGuard } from '../guards/jwt.guard';
-import { LocalAuthGuard } from '../guards/local.guard';
+import { JwtAuthGuard, LocalAuthGuard } from '../../../common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '../dto/login.dto';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';

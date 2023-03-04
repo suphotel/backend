@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard, RoleGuard, Roles } from '../../auth';
+import { JwtAuthGuard, RoleGuard, Roles } from '../../../common';
 import { StatsService } from '../service/stats.service';
 
 export interface StatsResponse {

@@ -14,7 +14,7 @@ import { HotelsService } from '../service/hotels.service';
 import { Hotel } from '@prisma/client';
 import { CreateHotelDto, createHotelSchema } from '../dto/create-hotel.dto';
 import { UpdateHotelDto, updateHotelSchema } from '../dto/update-hotel.dto';
-import { Roles, RoleGuard, JwtAuthGuard } from '../../auth';
+import { Roles, RoleGuard, JwtAuthGuard } from '../../../common';
 import { ModelNotFound, ModelNotFoundInterceptor } from '../../../common';
 import {
   ApiBearerAuth,

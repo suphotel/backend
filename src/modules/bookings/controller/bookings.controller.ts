@@ -17,7 +17,7 @@ import {
   CreateBookingDto,
   createBookingSchema,
 } from '../dto/create-booking.dto';
-import { JwtAuthGuard } from '../../auth';
+import { JwtAuthGuard } from '../../../common';
 import {
   UpdateBookingDto,
   updateBookingSchema,

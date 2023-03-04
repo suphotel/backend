@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard, RoleGuard, Roles } from '../../auth';
 import { StatsService } from '../service/stats.service';
 
@@ -10,6 +10,7 @@ export interface StatsResponse {
 }
 
 @Controller('stats')
+@ApiTags('stats')
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 

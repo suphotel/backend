@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 
 import { MulterModule } from '@nestjs/platform-express';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 
 import { AppController, AppService } from './app';
@@ -27,9 +25,6 @@ import { BookingsModule } from './modules/bookings';
     BookingsModule,
     MulterModule.register({
       dest: './uploads',
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
     }),
     ConfigModule.forRoot({
       isGlobal: true,

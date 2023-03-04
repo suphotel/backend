@@ -17,10 +17,10 @@ import { StatsModule } from './modules/stats/stats.module';
 
 @Module({
   imports: [
-    UsersModule,
     PrismaModule,
     AuthModule,
     CommonModule,
+    UsersModule,
     HotelsModule,
     HotelImagesModule,
     BookingsModule,

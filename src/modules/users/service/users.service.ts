@@ -35,6 +35,14 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto): Promise<User> {
+    if (await this.findByEmail(data.email)) {
+      throw new Error('Email already exists');
+    }
+
+    if (await this.findByPseudo(data.pseudo)) {
+      throw new Error('Pseudo already exists');
+    }
+
     return this.prisma.user.create({
       data: {
         email: data.email,

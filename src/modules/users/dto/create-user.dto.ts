@@ -1,17 +1,27 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import * as Joi from 'joi';
+import { ApiProperty } from '@nestjs/swagger';
+
+export const createUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+  pseudo: Joi.string().required(),
+  password: Joi.string().min(3).max(15).required().label('Password'),
+  passwordConfirmation: Joi.string()
+    .equal(Joi.ref('password'))
+    .required()
+    .label('Confirm password')
+    .options({ messages: { 'any.only': '{{#label}} does not match' } }),
+});
 
 export class CreateUserDto {
-  @IsEmail()
+  @ApiProperty()
   email: string;
 
-  @IsString()
+  @ApiProperty()
   pseudo: string;
 
-  @IsString()
-  @MinLength(8)
+  @ApiProperty()
   password: string;
 
-  @IsString()
-  @MinLength(8)
+  @ApiProperty()
   passwordConfirmation: string;
 }

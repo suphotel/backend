@@ -13,6 +13,7 @@ import { UsersModule } from './modules/users';
 import { HotelsModule } from './modules/hotels';
 import { HotelImagesModule } from './modules/hotel-images';
 import { BookingsModule } from './modules/bookings';
+import { StatsModule } from './modules/stats/stats.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { BookingsModule } from './modules/bookings';
     HotelsModule,
     HotelImagesModule,
     BookingsModule,
+    StatsModule,
     MulterModule.register({
       dest: './uploads',
     }),

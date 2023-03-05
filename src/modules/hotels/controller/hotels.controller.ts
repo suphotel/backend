@@ -7,11 +7,12 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { HotelsService } from '../service/hotels.service';
-import { Hotel } from '@prisma/client';
+import { Hotel, Prisma } from '@prisma/client';
 import { CreateHotelDto, createHotelSchema } from '../dto/create-hotel.dto';
 import { UpdateHotelDto, updateHotelSchema } from '../dto/update-hotel.dto';
 import { Roles, RoleGuard, JwtAuthGuard } from '../../../common';
@@ -24,6 +25,15 @@ import {
 } from '@nestjs/swagger';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 
+export type HotelQuery = {
+  name?: Prisma.SortOrder;
+  location?: Prisma.SortOrder;
+  createdAt?: Prisma.SortOrder;
+
+  skip?: string;
+  take?: string;
+};
+
 @Controller('hotels')
 @ApiTags('hotels')
 export class HotelsController {
@@ -31,8 +41,16 @@ export class HotelsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all hotels' })
-  async findAll(): Promise<Hotel[]> {
-    return await this.hotelsService.findMany();
+  async findAll(@Query() query: HotelQuery): Promise<Hotel[]> {
+    const { skip, take, ...sorting } = query;
+
+    return await this.hotelsService.findMany({
+      orderBy: {
+        ...(sorting as Prisma.HotelOrderByWithAggregationInput),
+      },
+      ...(skip && { skip: parseInt(skip) }),
+      ...(take && { take: parseInt(take) }),
+    });
   }
 
   @Get(':id')

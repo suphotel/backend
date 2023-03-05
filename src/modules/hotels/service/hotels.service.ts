@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../providers/prisma';
-import { Hotel } from '@prisma/client';
+import { Hotel, Prisma } from '@prisma/client';
 import { CreateHotelDto } from '../dto/create-hotel.dto';
 import { UpdateHotelDto } from '../dto/update-hotel.dto';
 
@@ -8,8 +8,13 @@ import { UpdateHotelDto } from '../dto/update-hotel.dto';
 export class HotelsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findMany(): Promise<Hotel[]> {
+  async findMany(args: Prisma.HotelAggregateArgs): Promise<Hotel[]> {
     return this.prismaService.hotel.findMany({
+      orderBy: {
+        ...args.orderBy,
+      },
+      skip: args.skip,
+      take: args.take,
       include: {
         images: true,
         bookings: true,

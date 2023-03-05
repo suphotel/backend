@@ -41,7 +41,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Get the current user' })
   @ApiBearerAuth()
   async whoami(@Request() req): Promise<User> {
-    return req.user;
+    return this.authService.whoami(req.user.id);
   }
 
   @Delete('delete-my-account')

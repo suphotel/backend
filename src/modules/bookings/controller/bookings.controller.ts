@@ -23,7 +23,15 @@ import {
   updateBookingSchema,
 } from '../dto/update-booking.dto';
 import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 
 @Controller('hotels/:hotelId/bookings')
@@ -35,6 +43,7 @@ export class BookingsController {
   @ModelNotFound([{ model: 'Hotel', field: 'hotelId' }])
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Get all bookings for a hotel' })
+  @ApiOkResponse({ description: 'Return all bookings' })
   async findAll(
     @Param('hotelId', ParseIntPipe) id: number,
   ): Promise<Booking[]> {
@@ -48,6 +57,8 @@ export class BookingsController {
   ])
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Get a booking by id' })
+  @ApiOkResponse({ description: 'Return a booking' })
+  @ApiNotFoundResponse({ description: 'Booking or Hotel not found' })
   async findOne(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
@@ -61,6 +72,9 @@ export class BookingsController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Create a new booking' })
   @ApiBearerAuth()
+  @ApiCreatedResponse({ description: 'Return the created booking' })
+  @ApiNotFoundResponse({ description: 'Hotel not found' })
+  @ApiBadRequestResponse({ description: 'Invalid data' })
   async create(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Body(new JoiValidationPipe(createBookingSchema)) body: CreateBookingDto,
@@ -78,6 +92,9 @@ export class BookingsController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Update a booking' })
   @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Booking updated successfully' })
+  @ApiNotFoundResponse({ description: 'Booking or Hotel not found' })
+  @ApiBadRequestResponse({ description: 'Invalid data' })
   async update(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
@@ -96,6 +113,8 @@ export class BookingsController {
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Delete a booking' })
   @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Booking deleted successfully' })
+  @ApiNotFoundResponse({ description: 'Booking or Hotel not found' })
   async delete(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,

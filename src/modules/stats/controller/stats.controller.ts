@@ -1,5 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard, RoleGuard, Roles } from '../../../common';
 import { StatsService } from '../service/stats.service';
 
@@ -19,6 +24,7 @@ export class StatsController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Get stats' })
   @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Return stats' })
   async index(): Promise<StatsResponse> {
     const usersCount = await this.statsService.getUsersCount();
     const hotelsCount = await this.statsService.getHotelsCount();

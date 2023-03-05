@@ -19,10 +19,13 @@ import { RoleGuard, JwtAuthGuard, Roles } from '../../../common';
 import { ModelNotFoundInterceptor, ModelNotFound } from '../../../common';
 import { HotelImage } from '@prisma/client';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -59,6 +62,9 @@ export class HotelImagesController {
   })
   @ApiBearerAuth()
   @ApiForbiddenResponse({ description: 'Protected by admin role' })
+  @ApiOkResponse({ description: 'Image upload successfully' })
+  @ApiNotFoundResponse({ description: 'Hotel not found' })
+  @ApiBadRequestResponse({ description: 'Invalid data' })
   async upload(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @UploadedFiles() images: Express.Multer.File[],
@@ -81,6 +87,8 @@ export class HotelImagesController {
   @ModelNotFound([{ model: 'Hotel', field: 'hotelId' }])
   @UseInterceptors(ModelNotFoundInterceptor)
   @ApiOperation({ summary: 'Get a hotel images' })
+  @ApiOkResponse({ description: 'Return a hotel images' })
+  @ApiNotFoundResponse({ description: 'Hotel not found' })
   async findAll(
     @Param('hotelId', ParseIntPipe) hotelId: number,
   ): Promise<HotelImage[]> {
@@ -101,6 +109,7 @@ export class HotelImagesController {
     },
     status: HttpStatus.OK,
   })
+  @ApiNotFoundResponse({ description: 'Hotel image or hotel not found' })
   async getPreview(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
@@ -124,6 +133,8 @@ export class HotelImagesController {
   @ApiOperation({ summary: 'Delete a hotel image by id' })
   @ApiBearerAuth()
   @ApiForbiddenResponse({ description: 'Protected by admin role' })
+  @ApiNotFoundResponse({ description: 'Hotel image or Hotel not found' })
+  @ApiOkResponse({ description: 'Hotel image deleted successfully' })
   async delete(
     @Param('hotelId', ParseIntPipe) hotelId: number,
     @Param('id', ParseIntPipe) id: number,
